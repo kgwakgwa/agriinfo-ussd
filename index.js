@@ -5,12 +5,10 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post("/", (req, res) => {
-    let { sessionId, serviceCode, phoneNumber, text } = req.body;
+    const { sessionId, serviceCode, phoneNumber, text } = req.body;
 
     let response = "";
-
-    // Split user input
-    let textValue = text.split("*");
+    const textArray = text.split("*");
 
     if (text === "") {
         // Main Menu
@@ -58,15 +56,16 @@ Keep harvest in dry, cool, ventilated stores.
 
 0. Back`;
     } else if (text === "4") {
+        // Start farmer registration
         response = `CON Enter your Name:`;
-    } else if (textValue.length === 2 && textValue[0] === "4") {
+    } else if (textArray.length === 2 && textArray[0] === "4") {
         response = `CON Enter your Location:`;
-    } else if (textValue.length === 3 && textValue[0] === "4") {
+    } else if (textArray.length === 3 && textArray[0] === "4") {
         response = `CON Enter your Crop/Livestock:`;
-    } else if (textValue.length === 4 && textValue[0] === "4") {
-        response = `END Thank you ${textValue[1]}! You are now registered.`;
+    } else if (textArray.length === 4 && textArray[0] === "4") {
+        response = `END Thank you ${textArray[1]}! You are now registered.`;
     } else if (text.endsWith("*0")) {
-        // Handle "Back" option
+        // Back to main menu
         response = `CON Welcome to AgriInfo
 1. Market Prices
 2. Weather Updates
@@ -77,6 +76,7 @@ Keep harvest in dry, cool, ventilated stores.
         // Exit
         response = "END Thank you for using AgriInfo!";
     } else {
+        // Catch invalid inputs
         response = "END Invalid option. Please try again.";
     }
 
@@ -86,5 +86,5 @@ Keep harvest in dry, cool, ventilated stores.
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`✅ Server running on port ${PORT}`);
 });
